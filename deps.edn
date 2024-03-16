@@ -1,0 +1,44 @@
+{:paths ["src" "target/classes" "resources"]
+ :deps {org.clojure/clojure                       {:mvn/version "1.11.1"}
+        com.taoensso/timbre                       {:mvn/version "6.2.2"}
+        org.clj-commons/byte-streams              {:mvn/version "0.3.4"}
+        com.taoensso/nippy                        {:mvn/version "3.3.0"}
+        datalevin/datalevin                       {:mvn/version "0.8.18"
+                                                   :exclusions [com.taoensso/nippy]}
+        com.google.cloud/google-cloud-datastore   {:mvn/version "2.18.2"}
+        lambdaisland/uri                          {:mvn/version "1.19.155"}}
+
+ :aliases
+ {:build-driver
+  {:extra-deps {io.github.clojure/tools.build {:mvn/version "0.10.0"}}
+   :main-opts  ["-m" "net.xlfe.dsp.jdbc.build"]}
+
+  :nrepl
+  {:extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}
+                cider/cider-nrepl {:mvn/version "0.28.4"}}
+   :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "--interactive"]}
+
+  :run-peer {:main-opts ["-m" "peer"]}
+  :dev
+  {:extra-paths ["classes" "development/src"]
+   :jvm-opts ["--add-opens=java.base/java.nio=ALL-UNNAMED"
+              "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
+              "-Ddatomic.printConnectionInfo=true"]
+   :extra-deps {
+                ; org.slf4j/slf4j-nop                       {:mvn/version "2.0.7"}
+                clojure.java-time/clojure.java-time {:mvn/version "1.4.2"}
+                org.postgresql/postgres     {:local/root "datomic-pro/lib/postgresql-42.5.1.jar"}
+                com.cognitect/http-endpoint {:local/root "datomic-pro/lib/http-endpoint-1.0.104.jar"}
+                com.cognitect/nano-impl     {:local/root "datomic-pro/lib/nano-impl-0.1.325.jar"}
+                com.datomic/datomic.specs   {:local/root "datomic-pro/lib/datomic.specs-0.1.3.jar"}
+                com.datomic/core2           {:local/root "datomic-pro/lib/core2-1.0.139.jar"}
+                db/datomic                  {:local/root "datomic-pro/datomic-transactor-pro.jar"
+                                             :exclusions [com.datomic/ion com.datomic/client
+                                                          com.datomic/client-spi bsh/bsh
+                                                          ; transactor wont start without some aws stuff...
+                                                          ; com.amazonaws/aws-java-sdk
+                                                          ; org.postgresql/postgres
+                                                          jline-win/jline-win
+                                                          com.cognitect/caster
+                                                          com.cognitect/rebl
+                                                          com.cognitect/tap]}}}}}
